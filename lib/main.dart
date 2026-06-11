@@ -36,15 +36,12 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // Feature: Splash screen delay
     Future.delayed(const Duration(seconds: 3), () {
       if (!mounted) return;
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => const HomestayListScreen(),
-        ),
+        MaterialPageRoute(builder: (context) => const HomestayListScreen()),
       );
     });
   }
@@ -52,15 +49,31 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 166, 210, 255),
+      backgroundColor: const Color.fromARGB(255, 166, 210, 255),
       body: Center(
-        child: Text(
-          'Homestay2U Malaysia',
-          style: GoogleFonts.poppins(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color:const Color( 0xFF0D304D),
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.home_rounded, size: 100, color: Color(0xFF0D304D)),
+
+            const SizedBox(height: 20),
+
+            Text(
+              'Homestay2U Malaysia',
+              style: GoogleFonts.poppins(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF0D304D),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Text(
+              'Find Your Perfect Stay',
+              style: GoogleFonts.poppins(fontSize: 16, color: Colors.black54),
+            ),
+          ],
         ),
       ),
     );
