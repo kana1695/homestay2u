@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/homestay.dart';
+import 'package:homestay2u/models/homestay.dart';
 
 class HomestayDetailScreen extends StatelessWidget {
   final Homestay homestay;
@@ -11,7 +11,7 @@ class HomestayDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Homestay Details'),
-        backgroundColor: Colors.teal,
+        backgroundColor: const Color.fromARGB(255, 143, 201, 255),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -33,7 +33,7 @@ class HomestayDetailScreen extends StatelessWidget {
                         const Icon(Icons.broken_image, size: 80),
                   )
                 else
-                  const Icon(Icons.home, size: 100, color: Colors.teal),
+                  const Icon(Icons.home, size: 100, color: Color.fromARGB(255, 143, 201, 255)),
 
                 const SizedBox(height: 15),
 

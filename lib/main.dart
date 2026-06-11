@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'screens/homestay_list_screen.dart';
 
 void main() {
@@ -11,14 +12,18 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(),
+        primaryColor: Color.fromARGB(255, 13, 48, 77),
+      ),
     );
   }
 }
 
-// Splash screen before opening main page
+//Splash screen
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -46,13 +51,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 166, 210, 255),
       body: Center(
         child: Text(
           'Homestay2U Malaysia',
-          style: TextStyle(
+          style: GoogleFonts.poppins(
             fontSize: 30,
             fontWeight: FontWeight.bold,
+            color:const Color( 0xFF0D304D),
           ),
         ),
       ),

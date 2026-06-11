@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/homestay.dart';
+import 'package:homestay2u/models/homestay.dart';
 
 // Service class to connect Flutter app with API
 class ApiService {
