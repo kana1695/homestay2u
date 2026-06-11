@@ -20,11 +20,11 @@ class _HomestayListScreenState extends State<HomestayListScreen> {
   final TextEditingController searchController = TextEditingController();
 
   //State and district filter
-  String selectedState = 'All';
-  String selectedDistrict = 'All';
+  String selectedState = 'State';
+  String selectedDistrict = 'District';
 
-  List<String> stateList = ['All'];
-  List<String> districtList = ['All'];
+  List<String> stateList = ['State'];
+  List<String> districtList = ['District'];
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _HomestayListScreenState extends State<HomestayListScreen> {
           }
 
           //state filter lists
-          stateList = ['All'];
+          stateList = ['State'];
 
           for (var homestay in homestayList) {
             if (homestay.state != null &&
@@ -82,10 +82,10 @@ class _HomestayListScreenState extends State<HomestayListScreen> {
 
   //district changes based on selected state
   void updateDistrictList() {
-    districtList = ['All'];
+    districtList = ['District'];
 
     for (var homestay in homestayList) {
-      if (selectedState == 'All' || homestay.state == selectedState) {
+      if (selectedState == 'State' || homestay.state == selectedState) {
         if (homestay.district != null &&
             homestay.district!.isNotEmpty &&
             !districtList.contains(homestay.district)) {
@@ -97,8 +97,8 @@ class _HomestayListScreenState extends State<HomestayListScreen> {
 
   //Search homestay
   void searchHomestay() {
-    selectedState = 'All';
-    selectedDistrict = 'All';
+    selectedState = 'State';
+    selectedDistrict = 'District';
 
     loadHomestays(keyword: searchController.text.trim());
   }
@@ -106,8 +106,8 @@ class _HomestayListScreenState extends State<HomestayListScreen> {
   //clear search and reload all homestays
   void clearSearch() {
     searchController.clear();
-    selectedState = 'All';
-    selectedDistrict = 'All';
+    selectedState = 'State';
+    selectedDistrict = 'District';
     loadHomestays();
   }
 
@@ -115,10 +115,11 @@ class _HomestayListScreenState extends State<HomestayListScreen> {
   List<Homestay> getFilteredHomestays() {
     return homestayList.where((homestay) {
       bool matchState =
-          selectedState == 'All' || homestay.state == selectedState;
+          selectedState == 'State' || homestay.state == selectedState;
 
       bool matchDistrict =
-          selectedDistrict == 'All' || homestay.district == selectedDistrict;
+          selectedDistrict == 'District' ||
+          homestay.district == selectedDistrict;
 
       return matchState && matchDistrict;
     }).toList();
@@ -140,7 +141,7 @@ class _HomestayListScreenState extends State<HomestayListScreen> {
 
       body: Column(
         children: [
-          // Feature: Search bar
+          //search bar
           Padding(
             padding: const EdgeInsets.all(10),
             child: TextField(
@@ -169,42 +170,64 @@ class _HomestayListScreenState extends State<HomestayListScreen> {
 
           //State and district dropdown filters
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               children: [
                 Expanded(
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    value: selectedState,
-                    items: stateList.map((state) {
-                      return DropdownMenuItem(value: state, child: Text(state));
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedState = value!;
-                        selectedDistrict = 'All';
-                      });
-                    },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      underline: const SizedBox(),
+                      value: selectedState,
+                      items: stateList.map((state) {
+                        return DropdownMenuItem(
+                          value: state,
+                          child: Text(state),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedState = value!;
+                          selectedDistrict = 'District';
+
+                          // Feature: District changes after state is selected
+                          updateDistrictList();
+                        });
+                      },
+                    ),
                   ),
                 ),
 
                 const SizedBox(width: 10),
 
                 Expanded(
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    value: selectedDistrict,
-                    items: districtList.map((district) {
-                      return DropdownMenuItem(
-                        value: district,
-                        child: Text(district),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedDistrict = value!;
-                      });
-                    },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      underline: const SizedBox(),
+                      value: selectedDistrict,
+                      items: districtList.map((district) {
+                        return DropdownMenuItem(
+                          value: district,
+                          child: Text(district),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedDistrict = value!;
+                        });
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -236,27 +259,30 @@ class _HomestayListScreenState extends State<HomestayListScreen> {
                       ],
                     ),
                   )
-                //Pull-to-refresh
+                //pull to refresh
                 : RefreshIndicator(
                     onRefresh: () async {
                       loadHomestays();
                     },
 
-                    // Feature: ListView.builder
                     child: ListView.builder(
                       itemCount: filteredList.length,
                       itemBuilder: (context, index) {
                         Homestay homestay = filteredList[index];
 
-                        // Feature: Card UI
+                        //card
                         return Card(
-                          margin: const EdgeInsets.all(8),
-                          elevation: 4,
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          elevation: 3,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(18),
                           ),
                           child: ListTile(
-                            // Feature: Go to detail page when tapped
+                            contentPadding: const EdgeInsets.all(12),
+                            //go to detail page when tapped
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -267,7 +293,7 @@ class _HomestayListScreenState extends State<HomestayListScreen> {
                               );
                             },
 
-                            // Feature: Image display if image exists
+                            //display if image exists
                             leading: homestay.imageUrl == null
                                 ? const Icon(
                                     Icons.home,
@@ -299,13 +325,18 @@ class _HomestayListScreenState extends State<HomestayListScreen> {
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('State: ${homestay.state}'),
-                                Text('District: ${homestay.district}'),
-                                Text('Price: ${homestay.price}'),
+                                const SizedBox(height: 5),
                                 Text(
-                                  'Description: ${homestay.description}',
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                  '${homestay.state} • ${homestay.district}',
+                                  style: GoogleFonts.poppins(fontSize: 12),
+                                ),
+                                Text(
+                                  'Price: RM${homestay.price}',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 12,
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ],
                             ),
